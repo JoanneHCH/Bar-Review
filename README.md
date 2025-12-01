@@ -80,7 +80,9 @@ bar-review/
 │
 ├── app.js                   # Main application entry point
 ├── package.json             # Project dependencies and scripts
+├── package-lock.json        # Locked dependency versions
 ├── .gitignore               # Git ignore rules
+├── .env                     # Environment variables (not committed)
 │
 ├── config/
 │   └── passport.js          # Passport configuration (Local, Google, Facebook strategies)
@@ -159,6 +161,9 @@ bar-review/
    ```
 ## 👩‍💻 Author
 Joanne Hsieh
+
 Full-Stack Developer
+
 Passionate about building practical, user-centered web applications.
+
 Experience in Node.js, Python, cloud deployment, and modern JavaScript development.
