@@ -1,0 +1,26 @@
+<h2><%= user.username %>'s Bar List</h2>
+<a href="/bars/new" class="btn btn-primary mb-3">+ Add New Bar</a>
+
+<ul class="list-group">
+  <% bars.forEach(bar => { %>
+    <li 
+      class="list-group-item bar-item d-flex justify-content-between align-items-center"
+      onclick="window.location.href='/bars/<%= bar._id %>'"
+    >
+      <div>
+        <span class="fw-bold text-dark"><%= bar.name %></span>
+      </div>
+
+      <div>
+        <% if (bar.rating) { %>
+          <% for (let i = 1; i <= 5; i++) { %>
+            <span class="star <%= i <= bar.rating ? '' : 'gray' %>">★</span>
+          <% } %>
+          <span class="text-muted small">（<%= bar.rating %> / 5）</span>
+        <% } else { %>
+          <span class="text-muted">Not yet rated</span>
+        <% } %>
+      </div>
+    </li>
+  <% }) %>
+</ul>

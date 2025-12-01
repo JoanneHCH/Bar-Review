@@ -1,0 +1,97 @@
+<h2>Add a New Bar</h2>
+
+<form action="/bars" method="POST" enctype="multipart/form-data">
+  <div class="mb-2">
+    <label>Name:</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+
+  <div class="mb-2">
+    <label>Location (searchable address):</label>
+    <!-- The id must be "autocomplete" -->
+    <input id="autocomplete" type="text" name="location" class="form-control" placeholder="Enter a location to search..." required>
+  </div>
+
+  <!-- Map display area -->
+  <div id="map" style="width: 100%; height: 400px; border-radius: 10px; margin-bottom: 15px;"></div>
+
+  <!-- Hidden fields for latitude/longitude -->
+  <input type="hidden" name="latitude" id="latitude">
+  <input type="hidden" name="longitude" id="longitude">
+
+  <div class="mb-2">
+    <label>Upload Images (multiple allowed):</label>
+    <input type="file" name="images" multiple class="form-control">
+  </div>
+
+<div class="mb-2">
+  <label>Rating:</label>
+  <select name="rating" class="form-select">
+    <option value="">Select a rating</option>
+    <option value="1">1 / 5</option>
+    <option value="2">2 / 5</option>
+    <option value="3">3 / 5</option>
+    <option value="4">4 / 5</option>
+    <option value="5">5 / 5</option>
+  </select>
+</div>
+
+  <div class="mb-2">
+    <label>Description</label>
+    <textarea name="description" class="form-control" rows="3"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-success mt-2">Submit</button>
+</form>
+
+<!-- Load Google Maps JS (remember to pass GOOGLE_MAPS_API_KEY from app.js) -->
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=<%= GOOGLE_MAPS_API_KEY %>&libraries=places&callback=initMap">
+</script>
+
+<script>
+  let map, marker, autocomplete;
+
+  function initMap() {
+    const taipei = { lat: 25.0478, lng: 121.5319 }; // Default: Taipei
+
+    // Initialize map
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: taipei,
+      zoom: 13,
+    });
+
+    // Initial marker (draggable)
+    marker = new google.maps.Marker({
+      position: taipei,
+      map: map,
+      draggable: true
+    });
+
+    // Create autocomplete input
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      { types: ["geocode"] }
+    );
+
+    // When user selects a place
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (!place.geometry) return;
+
+      const location = place.geometry.location;
+      document.getElementById("latitude").value = location.lat();
+      document.getElementById("longitude").value = location.lng();
+
+      map.setCenter(location);
+      marker.setPosition(location);
+    });
+
+    // Update coordinates when dragging marker
+    marker.addListener("dragend", () => {
+      const pos = marker.getPosition();
+      document.getElementById("latitude").value = pos.lat();
+      document.getElementById("longitude").value = pos.lng();
+    });
+  }
+</script>
